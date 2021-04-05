@@ -35,10 +35,21 @@ Start-Transcript -Path ($LogPath + "$CurrentDate.txt") > $null
 #>
 try{
     Write-Host "[Info] Fetching devices from $Target... " -ForegroundColor Gray -NoNewline
-    $Devices = @() 
-    $Devices += Get-Content $Target -ErrorAction Stop
-    $NumDevices = $Devices.Count
-    Write-Host "Success" -ForegroundColor Green
+    $Devices = @()
+    
+    if (Test-Path $Target -PathType Leaf){
+        if ([System.IO.Path]::GetExtension($Target) -eq ".txt"){ 
+            $Devices += Get-Content $Target -ErrorAction Stop
+            $NumDevices = $Devices.Count
+            Write-Host "Success" -ForegroundColor Green
+        }else{
+            Write-Host "`nOnly text files are supported." -ForegroundColor Red
+            Exit
+        }
+    }else{
+        Write-Host "`nThe file '$Target' does not exist." -ForegroundColor Red
+        Exit
+    }
 }catch{
     Write-Host "`nAn error occurred." -ForegroundColor Red
     Write-Host $Error[0] -ForegroundColor Red
