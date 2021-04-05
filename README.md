@@ -1,4 +1,4 @@
-# DiskPartitionAudit
+# Disk Partition Audit
 
 This script will generate a report on the partition types (GPT or MBR) of a list of target devices.
 
