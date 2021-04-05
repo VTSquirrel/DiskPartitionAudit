@@ -17,6 +17,17 @@ $QueryErrorMsg = "Error Querying Device"
 
 Clear-Host
 
+$LogPath = ("$pwd\Logs\")
+If(!(test-path $LogPath)){
+    New-Item -ItemType Directory -Force -Path $LogPath > $null
+    Write-Host "[Info] Created directory $LogPath" -ForegroundColor Gray
+}
+
+$CurrentDate = (Get-Date).ToString('MM-dd-yyyy hh-mm-ss tt')
+
+Start-Transcript -Path ($LogPath + "$CurrentDate.txt") > $null
+
+
 <#
 ====================================================================================================
                                         Get Devices
@@ -145,7 +156,7 @@ if($DisplayResults){
 }
 
 if($ExportToCsv){
-    $File = $OutputDirectory + "\DiskPartitionAudit $((Get-Date).ToString('MM-dd-yyyy hh-mm-ss tt')).csv"
+    $File = $OutputDirectory + "\DiskPartitionAudit $CurrentDate.csv"
     try{
         $Result | Export-Csv -Path $File -NoTypeInformation -ErrorAction Stop
         Write-Host "Report saved to '$File'"
@@ -154,3 +165,4 @@ if($ExportToCsv){
         Write-Host $Error[0] -ForegroundColor Red
     }
 }
+Stop-Transcript > $null
